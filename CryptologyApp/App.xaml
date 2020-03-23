@@ -21,5 +21,10 @@
                 <x:Type TypeName="consts:Consts+EncryptType"></x:Type>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
+        <ObjectDataProvider x:Key="enmKeyTypesTrithemius" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="consts:Consts+KeyTypesTrithemius"></x:Type>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
     </Application.Resources>
 </Application>

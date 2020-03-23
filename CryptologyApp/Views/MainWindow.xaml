@@ -10,16 +10,25 @@
     <Window.DataContext>
         <viewmodels:MainViewModel/>
     </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Style.Setters>
+                <Setter Property="MinHeight" Value="30"/>
+                <Setter Property="MaxHeight" Value="50"/>
+                <Setter Property="MinWidth" Value="150"/>
+                <Setter Property="MaxWidth" Value="250"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="Background" Value="LightBlue"/>
+                <Setter Property="Command" Value="{Binding OpenNewWindowCommand}"/>
+            </Style.Setters>
+        </Style>
+    </Window.Resources>
     <Grid Background="AliceBlue">
         <StackPanel VerticalAlignment="Center"
                     HorizontalAlignment="Center">
-            <Button Content="Lab1" 
-                    MinWidth="150"
-                    MaxWidth="250"
-                    MinHeight="30"
-                    MaxHeight="50"
-                    Background="MediumBlue"
-                    Command="{Binding OpenNewWindowCommand}"
+            <Button Content="Cesars cipher" 
+                    CommandParameter="{Binding Path=Content,RelativeSource={RelativeSource Mode=Self}}"/>
+            <Button Content="Trithemius cipher"
                     CommandParameter="{Binding Path=Content,RelativeSource={RelativeSource Mode=Self}}"/>
         </StackPanel>
     </Grid>

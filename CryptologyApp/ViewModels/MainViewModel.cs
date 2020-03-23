@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
+using CryptologyApp.Models;
+using System.Windows;
 
 namespace CryptologyApp.ViewModels
 {
@@ -21,6 +23,18 @@ namespace CryptologyApp.ViewModels
             }
         }
 
+        private Lab2View _lab2View;
+        private Lab2View Lab2View
+        {
+            get
+            {
+                if (_lab2View != null) return _lab2View;
+                _lab2View = new Lab2View();
+                _lab2View.Closed += (object o, EventArgs e) => { _lab2View = null; };
+                return _lab2View;
+            }
+        }
+
         public ICommand OpenNewWindowCommand 
         {
             get
@@ -29,14 +43,34 @@ namespace CryptologyApp.ViewModels
             }
         }
 
-        public bool CanExecuteOpenNewWindowCommand()
+        public bool CanExecuteOpenNewWindowCommand(object lab)
         {
-            return  Lab1View.Visibility != System.Windows.Visibility.Visible;
+            switch (Enum.Parse(typeof(Consts.Labs), lab.ToString().Split()[0]))
+            {
+                case Consts.Labs.Cesars:
+                    return Lab1View.Visibility != System.Windows.Visibility.Visible;
+                case Consts.Labs.Trithemius:
+                    return Lab2View.Visibility != System.Windows.Visibility.Visible;
+                default:
+                    return false;
+            }
+            
         }
 
-        public void ExecuteOpenNewWindowCommand()
+        public void ExecuteOpenNewWindowCommand(object lab)
         {
-            Lab1View.Show();
+            switch(Enum.Parse(typeof(Consts.Labs), lab.ToString().Split()[0]))
+            {
+                case Consts.Labs.Cesars:
+                    Lab1View.Show();
+                    break;
+                case Consts.Labs.Trithemius:
+                    Lab2View.Show();
+                    break;
+                default:
+                    MessageBox.Show("Wrong lab name");
+                    break;
+            }
         }
     }
 }
