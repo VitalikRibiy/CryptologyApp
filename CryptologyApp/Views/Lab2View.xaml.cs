@@ -1,4 +1,5 @@
 ﻿using CryptologyApp.Models;
+using CryptologyApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,6 +19,7 @@ namespace CryptologyApp.Views
     /// </summary>
     public partial class Lab2View : Window
     {
+
         public Lab2View()
         {
             InitializeComponent();
@@ -26,6 +28,11 @@ namespace CryptologyApp.Views
         private void ShowAuthor(object sender, RoutedEventArgs e)
         {
             MessageBox.Show(Consts.author);
+        }
+
+        private void Open_FindKeyWindow(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show((DataContext as Lab2ViewModel).Attack());
         }
     }
 }

@@ -320,8 +320,8 @@ namespace CryptologyApp.ViewModels
         #region Methods
         private void Act()
         {
-            try
-            {
+            //try
+            //{
                 if (InputString == null) return;
                 switch(SelectedOption)
                 {
@@ -332,11 +332,11 @@ namespace CryptologyApp.ViewModels
                         ExportString = EncryptionMachine.DecryptTrithemius(InputString);
                         break;
                 }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("Invalid input data,please try again");
-            }
+            //}
+            //catch (Exception e)
+            //{
+            //    MessageBox.Show("Invalid input data,please try again");
+            //}
 
         }
 
@@ -364,6 +364,11 @@ namespace CryptologyApp.ViewModels
             {
                 return (byte[])null;
             }
+        }
+
+        public string Attack()
+        {
+            return EncryptionMachine.FindKey(InputString, ExportString);
         }
 
         #endregion

@@ -103,7 +103,13 @@
                                 Width="50"
                                 Height="20"
                                 Margin="5"
-                                Command="{Binding ActCommand}"/>    
+                                Command="{Binding ActCommand}"/>
+                        <Button x:Name="FindKey"
+                                Content="Find key"
+                                Width="50"
+                                Height="20"
+                                Margin="5"
+                                Click="Open_FindKeyWindow"/>
                     </StackPanel>
                 </RibbonGroup>
             </RibbonTab>
