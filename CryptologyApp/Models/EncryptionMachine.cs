@@ -22,7 +22,8 @@ namespace CryptologyApp.Models
         }
         private string alphabet = alphabetEng;
 
-        public string Encrypt(string message)
+        #region Cesar
+        public string EncryptCesar(string message)
         {
             var encoded = string.Empty;
             foreach(char el in message)
@@ -33,13 +34,13 @@ namespace CryptologyApp.Models
                 }
                 else
                 {
-                    encoded += GetEncrChar(el, Key);
+                    encoded += GetEncrCesarChar(el, Key);
                 }
             }
             return encoded;
         }
 
-        public string Decrypt(string message)
+        public string DecryptCesar(string message)
         {
             var decoded = string.Empty;
             foreach (char el in message)
@@ -50,13 +51,13 @@ namespace CryptologyApp.Models
                 }
                 else
                 {
-                    decoded += GetEncrChar(el, alphabet.Length - Key);
+                    decoded += GetEncrCesarChar(el, alphabet.Length - Key);
                 }
             }
             return decoded;
         }
 
-        public string EncryptBytes(string message)
+        public string EncryptCesarBytes(string message)
         {
             var encoded = string.Empty;
             foreach (char el in message)
@@ -67,13 +68,13 @@ namespace CryptologyApp.Models
                 }
                 else
                 {
-                    encoded += GetEncrByte(el, Key);
+                    encoded += GetEncrCesarByte(el, Key);
                 }
             }
             return encoded;
         }
 
-        public string DecryptBytes(string message)
+        public string DecryptCesarBytes(string message)
         {
             var decoded = string.Empty;
             foreach (char el in message)
@@ -84,7 +85,7 @@ namespace CryptologyApp.Models
                 }
                 else
                 {
-                    decoded += GetEncrByte(el, byteCharacteres.Length - Key);
+                    decoded += GetEncrCesarByte(el, byteCharacteres.Length - Key);
                 }
             }
             return decoded;
@@ -102,26 +103,139 @@ namespace CryptologyApp.Models
             }
         }
 
-        public char GetEncrByte(char el,int key)
+        public char GetEncrCesarByte(char el,int key)
         {
             return byteCharacteres[(byteCharacteres.IndexOf(el) + key) % byteCharacteres.Length];
         }
 
-        public char GetEncrChar(char el,int key)
+        public char GetEncrCesarChar(char el,int key)
         {
             return alphabet[(alphabet.IndexOf(el) + key) % alphabet.Length];
         }
 
-        public string GetByteMessage(string message64,int key)
+        #endregion
+
+        #region Trithemius
+
+        public KeyTypesTrithemius keyType;
+
+        public int[] lineaKey = new int[2];
+
+        public int[] squadKey = new int[3];
+
+        public string Motto { get; set; }
+
+        private static int Mod(int dividend, int divisor)
         {
-            var bytes = Convert.FromBase64String(message64);
-            byte[] result = new byte[bytes.Length];
-            foreach(var b in bytes)
+            var result = dividend % divisor;
+
+            if (result >= 0)
             {
-                result[result.Length] = (byte)((int)b + 1);
+                return result;
             }
-            return Convert.ToBase64String(result);
+            else
+            {
+                return Math.Abs(result + divisor);
+            }
         }
+
+        public string EncryptTrithemius(string input)
+        {
+            string exp = string.Empty;
+            var count = 0;
+            foreach(var x in input)
+            {
+                if (alphabet.Contains(x))
+                {
+                    exp += alphabet[Mod(((alphabet.IndexOf(x)) + CalculateK(count)), alphabet.Length)];
+                }
+                else
+                {
+                    exp += x;
+                }
+                count++;
+            }
+            return exp;
+        }
+
+        public string DecryptTrithemius(string input)
+        {
+            string exp = string.Empty;
+            var count = 0;
+            foreach (var y in input)
+            {
+                if(alphabet.Contains(y))
+                {
+                    exp += alphabet[Mod(((alphabet.IndexOf(y)) + alphabet.Length - (CalculateK(count) % alphabet.Length)), alphabet.Length)];
+                }
+                else
+                {
+                    exp += y;
+                }
+                count++;
+            }
+            return exp;
+        }
+
+        public int CalculateK(int i)
+        {
+            switch(keyType)
+            {
+                case KeyTypesTrithemius.Lineal:
+                    return i * lineaKey[0] + lineaKey[1];
+                case KeyTypesTrithemius.Squared:
+                    return squadKey[0] * squadKey[0] + squadKey[1] * i + squadKey[2];
+                case KeyTypesTrithemius.Motto:
+                    if (Motto == null || Motto.Length == 0) return 0;
+                    while(Motto.Length < i)
+                    {
+                        Motto += Motto;
+                    }
+                    return alphabet.IndexOf(Motto[i]);
+                default:
+                    return 0;
+            }
+        }
+
+        public string FindKey(string inputDecoded, string inputEncoded)
+        {
+            if (keyType == KeyTypesTrithemius.Lineal && inputDecoded.Length >= 2)
+            {
+                var n = alphabet.Length;
+
+                var b = Mod(alphabet.IndexOf(inputEncoded[0]) -
+                        alphabet.IndexOf(inputDecoded[0]), n);
+
+                var a = Mod(alphabet.IndexOf(inputEncoded[1]) -
+                        alphabet.IndexOf(inputDecoded[1]) - b, n);
+
+                return $"a={a}, b={b}";
+            }
+            else if (keyType == KeyTypesTrithemius.Squared && inputDecoded.Length >= 3)
+            {
+                var n = alphabet.Length;
+
+                var c = Mod(alphabet.IndexOf(inputEncoded[0]) -
+                        alphabet.IndexOf(inputDecoded[0]), n);
+
+                var ab = alphabet.IndexOf(inputEncoded[1]) -
+                        alphabet.IndexOf(inputDecoded[1]) - c;
+
+                var a = Mod((alphabet.IndexOf(inputEncoded[2]) -
+                        alphabet.IndexOf(inputDecoded[2]) - c - 2 * ab) / 2, n);
+
+                var b = Mod(alphabet.IndexOf(inputEncoded[1]) -
+                        alphabet.IndexOf(inputDecoded[1]) - c - a, n);
+
+                return $"a={a}, b={b}, c={c}";
+            }
+            else
+            {
+                return ":(";
+            }
+        }
+
+        #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
 

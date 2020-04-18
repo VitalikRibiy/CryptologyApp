@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\Lab2View.xaml~RF9de3624.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Images\" />
   </ItemGroup>
 

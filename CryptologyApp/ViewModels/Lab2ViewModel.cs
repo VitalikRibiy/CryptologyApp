@@ -13,7 +13,7 @@ using static CryptologyApp.Models.Consts;
 
 namespace CryptologyApp.ViewModels
 {
-    public class Lab1ViewModel : INotifyPropertyChanged
+    public class Lab2ViewModel : INotifyPropertyChanged
     {
         private CryptionOption _selectedOption;
         public CryptionOption SelectedOption
@@ -50,10 +50,41 @@ namespace CryptologyApp.ViewModels
             }
         }
 
+        private KeyTypesTrithemius _keyType = KeyTypesTrithemius.Lineal;
+        public KeyTypesTrithemius KeyType 
+        { 
+            get { return _keyType; }
+            set
+            {
+                _keyType = value;
+                EncryptionMachine.keyType = _keyType;
+                switch (_keyType)
+                {
+                    case KeyTypesTrithemius.Lineal:
+                        LinealKeyVisibility = Visibility.Visible;
+                        SquadKeyVisibility = Visibility.Collapsed;
+                        MottoKeyVisibility = Visibility.Collapsed;
+                        break;
+                    case KeyTypesTrithemius.Squared:
+                        LinealKeyVisibility = Visibility.Collapsed;
+                        SquadKeyVisibility = Visibility.Visible;
+                        MottoKeyVisibility = Visibility.Collapsed;
+                        break;
+                    case KeyTypesTrithemius.Motto:
+                        LinealKeyVisibility = Visibility.Collapsed;
+                        SquadKeyVisibility = Visibility.Collapsed;
+                        MottoKeyVisibility = Visibility.Visible;
+                        break;
+                }
+                OnPropertyChanged();
+            }
+        }
+
         public EncryptionMachine EncryptionMachine { get; }
 
         private string _inputString;
-        public string InputString {
+        public string InputString
+        {
             get { return _inputString; }
             set
             {
@@ -74,7 +105,104 @@ namespace CryptologyApp.ViewModels
             }
         }
 
-        public Lab1ViewModel()
+        private Visibility _linealKeyVisibility = Visibility.Visible;
+        public Visibility LinealKeyVisibility
+        {
+            get { return _linealKeyVisibility; }
+            set
+            {
+                _linealKeyVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Visibility _squadKeyVisibility = Visibility.Collapsed;
+        public Visibility SquadKeyVisibility
+        {
+            get { return _squadKeyVisibility; }
+            set
+            {
+                _squadKeyVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Visibility _mottoKeyVisibility = Visibility.Collapsed;
+        public Visibility MottoKeyVisibility
+        {
+            get { return _mottoKeyVisibility; }
+            set
+            {
+                _mottoKeyVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #region Lineal
+        private int _linealA;
+        public int LinealA
+        {
+            get { return _linealA; }
+            set
+            {
+                _linealA = value;
+                EncryptionMachine.lineaKey[0] = _linealA;
+                Act();
+            }
+        }
+
+        private int _linealB;
+        public int LinealB
+        {
+            get { return _linealB; }
+            set
+            {
+                _linealB = value;
+                EncryptionMachine.lineaKey[1] = _linealB;
+                Act();
+            }
+        }
+        #endregion
+
+        #region Squad
+        private int _squadA;
+        public int SquadA
+        {
+            get { return _squadA; }
+            set
+            {
+                _squadA = value;
+                EncryptionMachine.squadKey[0] = _squadA;
+                Act();
+            }
+        }
+
+        private int _squadB;
+        public int SquadB
+        {
+            get { return _squadB; }
+            set
+            {
+                _squadB = value;
+                EncryptionMachine.squadKey[1] = _squadB;
+                Act();
+            }
+        }
+
+        private int _squadC;
+        public int SquadC
+        {
+            get { return _squadC; }
+            set
+            {
+                _squadC = value;
+                EncryptionMachine.squadKey[2] = _squadC;
+                Act();
+            }
+        }
+        #endregion
+
+        public Lab2ViewModel()
         {
             EncryptionMachine = new EncryptionMachine();
         }
@@ -152,7 +280,7 @@ namespace CryptologyApp.ViewModels
                 if (EncryptType == EncryptType.Bytes)
                     File.WriteAllBytes(openFileDialog.FileName, GetFromBase64String(ExportString));
             }
-               
+
         }
 
         public bool CanExecutePreviousCommand()
@@ -192,36 +320,23 @@ namespace CryptologyApp.ViewModels
         #region Methods
         private void Act()
         {
-            try
-            {
+            //try
+            //{
                 if (InputString == null) return;
-                if (EncryptType == EncryptType.Bytes)
+                switch(SelectedOption)
                 {
-                    if (SelectedOption == CryptionOption.Encrypt)
-                    {
-                        ExportString = EncryptionMachine.EncryptCesarBytes(InputString);
-                    }
-                    else if (SelectedOption == CryptionOption.Decrypt)
-                    {
-                        ExportString = EncryptionMachine.DecryptCesarBytes(InputString);
-                    }
+                    case CryptionOption.Encrypt:
+                        ExportString = EncryptionMachine.EncryptTrithemius(InputString);
+                        break;
+                    case CryptionOption.Decrypt:
+                        ExportString = EncryptionMachine.DecryptTrithemius(InputString);
+                        break;
                 }
-                else
-                {
-                    if (SelectedOption == CryptionOption.Encrypt)
-                    {
-                        ExportString = EncryptionMachine.EncryptCesar(InputString);
-                    }
-                    else if (SelectedOption == CryptionOption.Decrypt)
-                    {
-                        ExportString = EncryptionMachine.DecryptCesar(InputString);
-                    }
-                }
-            }
-            catch(Exception e)
-            {
-                MessageBox.Show("Invalid input data,please try again");
-            }
+            //}
+            //catch (Exception e)
+            //{
+            //    MessageBox.Show("Invalid input data,please try again");
+            //}
 
         }
 
@@ -249,6 +364,11 @@ namespace CryptologyApp.ViewModels
             {
                 return (byte[])null;
             }
+        }
+
+        public string Attack()
+        {
+            return EncryptionMachine.FindKey(InputString, ExportString);
         }
 
         #endregion

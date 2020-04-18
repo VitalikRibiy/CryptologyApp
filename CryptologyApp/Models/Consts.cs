@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace CryptologyApp.Models
@@ -27,6 +28,23 @@ namespace CryptologyApp.Models
         {
             Characters = 0,
             Bytes = 1
+        }
+
+        [DataContract(Name = "KeyTypesTrithemius")]
+        public enum KeyTypesTrithemius
+        {
+            [EnumMember(Value = "Lineal")]
+            Lineal,
+            [EnumMember(Value = "Squared")]
+            Squared,
+            [EnumMember(Value = "Motto")]
+            Motto
+        }
+
+        public enum Labs
+        {
+            Cesars,
+            Trithemius
         }
     }
 }
