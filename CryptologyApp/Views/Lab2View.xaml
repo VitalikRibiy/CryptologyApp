@@ -105,7 +105,7 @@
                                 Margin="5"
                                 Command="{Binding ActCommand}"/>
                         <Button x:Name="FindKey"
-                                Content="Find key"
+                                Content="Attack"
                                 Width="50"
                                 Height="20"
                                 Margin="5"
