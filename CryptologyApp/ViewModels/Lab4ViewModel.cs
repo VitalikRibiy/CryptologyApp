@@ -2,16 +2,18 @@
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using static CryptologyApp.Models.Consts;
 
 namespace CryptologyApp.ViewModels
 {
-    public class Lab3ViewModel: INotifyPropertyChanged
+    public class Lab4ViewModel: INotifyPropertyChanged
     {
         private CryptionOption _selectedOption;
         public CryptionOption SelectedOption
@@ -20,6 +22,18 @@ namespace CryptologyApp.ViewModels
             set
             {
                 _selectedOption = value;
+                Act();
+            }
+        }
+
+        private Languages _language;
+        public Languages Language
+        {
+            get { return _language; }
+            set
+            {
+                _language = value;
+                EncryptionMachine.setVigenereLanguage(_language);
                 Act();
             }
         }
@@ -49,7 +63,7 @@ namespace CryptologyApp.ViewModels
             }
         }
 
-        public Lab3ViewModel()
+        public Lab4ViewModel()
         {
             EncryptionMachine = new EncryptionMachine();
         }
@@ -89,20 +103,7 @@ namespace CryptologyApp.ViewModels
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
-                var inp = File.ReadAllText(openFileDialog.FileName);
-                InputString = inp;
-                var bytes = File.ReadAllBytes(openFileDialog.FileName);
-                var key = File.ReadAllBytes("KeyText.txt");
-                if (CryptionOption.Encrypt == SelectedOption)
-                {
-                    File.WriteAllBytes("Output.txt", EncryptionMachine.Encrypt(bytes,key));
-                    ExportString = File.ReadAllText("Output.txt");
-                }
-                else
-                {
-                    File.WriteAllBytes("Output.txt", EncryptionMachine.Decrypt(bytes, key));
-                    ExportString = File.ReadAllText("Output.txt");
-                }
+                InputString = File.ReadAllText(openFileDialog.FileName);
             }
         }
 
@@ -138,7 +139,16 @@ namespace CryptologyApp.ViewModels
         {
             try
             {
-                if (InputString == null || string.IsNullOrWhiteSpace(EncryptionMachine.XORKey) ) return;
+                if (InputString == null) return;
+                switch (SelectedOption)
+                {
+                    case CryptionOption.Encrypt:
+                        ExportString = EncryptionMachine.VigenereCipher(InputString, true);
+                        break;
+                    case CryptionOption.Decrypt:
+                        ExportString = EncryptionMachine.VigenereCipher(InputString, false);
+                        break;
+                }
             }
             catch (Exception e)
             {
@@ -146,6 +156,7 @@ namespace CryptologyApp.ViewModels
             }
 
         }
+
 
         #endregion
 

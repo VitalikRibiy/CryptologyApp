@@ -33,7 +33,7 @@ namespace CryptologyApp.ViewModels
             set
             {
                 _language = value;
-                EncryptionMachine.setLanguage(_language);
+                EncryptionMachine.setCesarLanguage(_language);
                 Act();
             }
         }

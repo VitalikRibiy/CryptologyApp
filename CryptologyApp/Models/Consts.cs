@@ -45,7 +45,8 @@ namespace CryptologyApp.Models
         {
             Cesars,
             Trithemius,
-            XOR
+            XOR,
+            Vigenere
         }
     }
 }

@@ -12,9 +12,11 @@ namespace CryptologyApp.Models
 {
     public class EncryptionMachine : INotifyPropertyChanged
     {
+        #region Cesar
+
         private int _key;
-        public int Key 
-        { 
+        public int Key
+        {
             get { return _key; }
             set
             {
@@ -22,15 +24,13 @@ namespace CryptologyApp.Models
                 OnPropertyChanged();
             }
         }
-        private string alphabet = alphabetEng;
-
-        #region Cesar
+        private string cesarAlphabet = alphabetEng;
         public string EncryptCesar(string message)
         {
             var encoded = string.Empty;
             foreach(char el in message)
             {
-                if (!alphabet.Contains(el))
+                if (!cesarAlphabet.Contains(el))
                 {
                     encoded += el;
                 }
@@ -47,13 +47,13 @@ namespace CryptologyApp.Models
             var decoded = string.Empty;
             foreach (char el in message)
             {
-                if (!alphabet.Contains(el))
+                if (!cesarAlphabet.Contains(el))
                 {
                     decoded += el;
                 }
                 else
                 {
-                    decoded += GetEncrCesarChar(el, alphabet.Length - Key);
+                    decoded += GetEncrCesarChar(el, cesarAlphabet.Length - Key);
                 }
             }
             return decoded;
@@ -93,15 +93,15 @@ namespace CryptologyApp.Models
             return decoded;
         }
 
-        public void setLanguage(Languages language)
+        public void setCesarLanguage(Languages language)
         {
             if (language == Languages.English)
             {
-                alphabet = alphabetEng;
+                cesarAlphabet = alphabetEng;
             }
             else if (language == Languages.Ukrainian)
             {
-                alphabet = alphabetUkr;
+                cesarAlphabet = alphabetUkr;
             }
         }
 
@@ -112,12 +112,24 @@ namespace CryptologyApp.Models
 
         public char GetEncrCesarChar(char el,int key)
         {
-            return alphabet[(alphabet.IndexOf(el) + key) % alphabet.Length];
+            return cesarAlphabet[(cesarAlphabet.IndexOf(el) + key) % cesarAlphabet.Length];
         }
 
         #endregion
 
         #region Trithemius
+
+        private int _trithemiusKey;
+        public int TrithemiusKey
+        {
+            get { return _trithemiusKey; }
+            set
+            {
+                _trithemiusKey = value;
+                OnPropertyChanged();
+            }
+        }
+        private string trithemiusAlphabet = alphabetEng;
 
         public KeyTypesTrithemius keyType;
 
@@ -147,9 +159,9 @@ namespace CryptologyApp.Models
             var count = 0;
             foreach(var x in input)
             {
-                if (alphabet.Contains(x))
+                if (trithemiusAlphabet.Contains(x))
                 {
-                    exp += alphabet[Mod(((alphabet.IndexOf(x)) + CalculateK(count)), alphabet.Length)];
+                    exp += trithemiusAlphabet[Mod(((trithemiusAlphabet.IndexOf(x)) + CalculateK(count)), trithemiusAlphabet.Length)];
                 }
                 else
                 {
@@ -166,9 +178,9 @@ namespace CryptologyApp.Models
             var count = 0;
             foreach (var y in input)
             {
-                if(alphabet.Contains(y))
+                if(trithemiusAlphabet.Contains(y))
                 {
-                    exp += alphabet[Mod(((alphabet.IndexOf(y)) + alphabet.Length - (CalculateK(count) % alphabet.Length)), alphabet.Length)];
+                    exp += trithemiusAlphabet[Mod(((trithemiusAlphabet.IndexOf(y)) + trithemiusAlphabet.Length - (CalculateK(count) % trithemiusAlphabet.Length)), trithemiusAlphabet.Length)];
                 }
                 else
                 {
@@ -193,7 +205,7 @@ namespace CryptologyApp.Models
                     {
                         Motto += Motto;
                     }
-                    return alphabet.IndexOf(Motto[i]);
+                    return trithemiusAlphabet.IndexOf(Motto[i]);
                 default:
                     return 0;
             }
@@ -203,37 +215,49 @@ namespace CryptologyApp.Models
         {
             if (keyType == KeyTypesTrithemius.Lineal && inputDecoded.Length >= 2)
             {
-                var n = alphabet.Length;
+                var n = trithemiusAlphabet.Length;
 
-                var b = Mod(alphabet.IndexOf(inputEncoded[0]) -
-                        alphabet.IndexOf(inputDecoded[0]), n);
+                var b = Mod(trithemiusAlphabet.IndexOf(inputEncoded[0]) -
+                        trithemiusAlphabet.IndexOf(inputDecoded[0]), n);
 
-                var a = Mod(alphabet.IndexOf(inputEncoded[1]) -
-                        alphabet.IndexOf(inputDecoded[1]) - b, n);
+                var a = Mod(trithemiusAlphabet.IndexOf(inputEncoded[1]) -
+                        trithemiusAlphabet.IndexOf(inputDecoded[1]) - b, n);
 
                 return $"a={a}, b={b}";
             }
             else if (keyType == KeyTypesTrithemius.Squared && inputDecoded.Length >= 3)
             {
-                var n = alphabet.Length;
+                var n = trithemiusAlphabet.Length;
 
-                var c = Mod(alphabet.IndexOf(inputEncoded[0]) -
-                        alphabet.IndexOf(inputDecoded[0]), n);
+                var c = Mod(trithemiusAlphabet.IndexOf(inputEncoded[0]) -
+                        trithemiusAlphabet.IndexOf(inputDecoded[0]), n);
 
-                var ab = alphabet.IndexOf(inputEncoded[1]) -
-                        alphabet.IndexOf(inputDecoded[1]) - c;
+                var ab = trithemiusAlphabet.IndexOf(inputEncoded[1]) -
+                        trithemiusAlphabet.IndexOf(inputDecoded[1]) - c;
 
-                var a = Mod((alphabet.IndexOf(inputEncoded[2]) -
-                        alphabet.IndexOf(inputDecoded[2]) - c - 2 * ab) / 2, n);
+                var a = Mod((trithemiusAlphabet.IndexOf(inputEncoded[2]) -
+                        trithemiusAlphabet.IndexOf(inputDecoded[2]) - c - 2 * ab) / 2, n);
 
-                var b = Mod(alphabet.IndexOf(inputEncoded[1]) -
-                        alphabet.IndexOf(inputDecoded[1]) - c - a, n);
+                var b = Mod(trithemiusAlphabet.IndexOf(inputEncoded[1]) -
+                        trithemiusAlphabet.IndexOf(inputDecoded[1]) - c - a, n);
 
                 return $"a={a}, b={b}, c={c}";
             }
             else
             {
                 return ":(";
+            }
+        }
+
+        public void setTrithemiusLanguage(Languages language)
+        {
+            if (language == Languages.English)
+            {
+                trithemiusAlphabet = alphabetEng;
+            }
+            else if (language == Languages.Ukrainian)
+            {
+                trithemiusAlphabet = alphabetUkr;
             }
         }
 
@@ -254,22 +278,90 @@ namespace CryptologyApp.Models
         
         public string EncryptDecryptXOR(string input)
         {
-            //StratchKey(input);
-            var first = Encoding.ASCII.GetBytes(input);
-            var second = Encoding.ASCII.GetBytes(XORKey);
-            byte[] output = new byte[first.Length];
-            
-            for (int i = 0; i < input.Length; i++)
-            {
-                output[i] = (byte)(input[i] ^ second[i % second.Length]);
-            }
-            //SaveFileDialog openFileDialog = new SaveFileDialog();
-            //if (openFileDialog.ShowDialog() == true)
+            var first = Convert.FromBase64String(input);
+            var second = Convert.FromBase64String(XORKey);
+            byte[] output = Encrypt(first,second);
+
+            //for (int i = 0; i < first.Length; i++)
             //{
-            //    File.WriteAllBytes(openFileDialog.FileName, output);
+            //    output[i] = (byte)(first[i] ^ second[i % second.Length]);
             //}
-            return Encoding.ASCII.GetString(output);
+            //var s = Encoding.ASCII.GetString(output);
+            File.WriteAllBytes("CashText.txt", output);
+            return File.ReadAllText("CashText.txt");
         }
+
+        public byte[] Encrypt(byte[] text, byte[] key)
+        {
+            if (text.Length <= key.Length)
+            {
+                var result = new byte[text.Length];
+                for (int i = 0; i < text.Length; i++)
+                {
+                    result[i] = (byte)(text[i] ^ key[i]);
+                }
+                return result;
+            }
+            else
+            {
+                var newKeyList = key.ToList();
+                while (newKeyList.Count < text.Length)
+                {
+                    newKeyList.InsertRange(0, key.ToList());
+                }
+
+                var result = new byte[text.Length];
+                for (int i = 0; i < text.Length; i++)
+                {
+                    result[i] = (byte)(text[i] ^ newKeyList[i]);
+                }
+                return result;
+            }
+        }
+
+        public byte[] Decrypt(byte[] text, byte[] key)
+        {
+            if (text.Length <= key.Length)
+            {
+                var result = new byte[text.Length];
+                for (int i = 0; i < text.Length; i++)
+                {
+                    result[i] = (byte)(text[i] ^ key[i]);
+                }
+                return result;
+            }
+            else
+            {
+                var newKeyList = key.ToList();
+                while (newKeyList.Count < text.Length)
+                {
+                    newKeyList.InsertRange(0, key.ToList());
+                }
+
+                var result = new byte[text.Length];
+                for (int i = 0; i < text.Length; i++)
+                {
+                    result[i] = (byte)(text[i] ^ newKeyList[i]);
+                }
+                return result;
+            }
+        }
+
+        //public string EncryptDecryptXOR(string input)
+        //{
+        //    File.WriteAllText("CashFile.txt", input);
+        //    var first = File.ReadAllBytes("CashFile.txt");
+        //    File.WriteAllText("KeyFile.txt", XORKey);
+        //    var second = File.ReadAllBytes("KeyFile.txt");
+        //    byte[] output = new byte[first.Length];
+
+        //    for (int i = 0; i < input.Length; i++)
+        //    {
+        //        output[i] = (byte)(input[i] ^ second[i % second.Length]);
+        //    }
+        //    File.WriteAllBytes("ResultFile.txt", output);
+        //    return File.ReadAllText("ResultFile.txt");
+        //}
 
         public void StratchKey(string input)
         {
@@ -277,6 +369,71 @@ namespace CryptologyApp.Models
             while (XORKey.Length < input.Length)
             {
                 XORKey += XORKey;
+            }
+        }
+
+        #endregion
+
+        #region Vigenere
+
+        private string _vigenereKey;
+        public string VigenereKey
+        {
+            get { return _vigenereKey; }
+            set
+            {
+                _vigenereKey = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private static int VMod(int a, int b)
+        {
+            return (a % b + b) % b;
+        }
+
+        public string VigenereCipher(string input, bool encipher)
+        {
+            for (int i = 0; i < VigenereKey.Length; ++i)
+                if (!char.IsLetter(VigenereKey[i]))
+                    return null; // Error
+
+            string output = string.Empty;
+            int nonAlphaCharCount = 0;
+
+            for (int i = 0; i < input.Length; ++i)
+            {
+                if (char.IsLetter(input[i]))
+                {
+                    bool cIsUpper = char.IsUpper(input[i]);
+                    char offset = cIsUpper ? 'A' : 'a';
+                    int keyIndex = (i - nonAlphaCharCount) % VigenereKey.Length;
+                    int k = (cIsUpper ? char.ToUpper(VigenereKey[keyIndex]) : char.ToLower(VigenereKey[keyIndex])) - offset;
+                    k = encipher ? k : -k;
+                    char ch = vigenereAlphabet[(VMod(((input[i] + k) - offset), vigenereAlphabet.Length)) + offset];
+                    output += ch;
+                }
+                else
+                {
+                    output += input[i];
+                    ++nonAlphaCharCount;
+                }
+            }
+
+            return output;
+        }
+
+        private string vigenereAlphabet = alphabetEng;
+
+        public void setVigenereLanguage(Languages language)
+        {
+            if (language == Languages.English)
+            {
+                vigenereAlphabet = alphabetEng;
+            }
+            else if (language == Languages.Ukrainian)
+            {
+                vigenereAlphabet = alphabetUkr;
             }
         }
 

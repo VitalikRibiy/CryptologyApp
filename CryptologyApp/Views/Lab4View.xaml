@@ -1,4 +1,4 @@
-﻿<Window x:Class="CryptologyApp.Views.Lab3View"
+﻿<Window x:Class="CryptologyApp.Views.Lab4View"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,9 +6,9 @@
         xmlns:viewmodels="clr-namespace:CryptologyApp.ViewModels"
         xmlns:local="clr-namespace:CryptologyApp.Views"
         mc:Ignorable="d"
-        Title="Lab3View" Height="450" Width="800">
+        Title="Lab4View" Height="450" Width="800">
     <Window.DataContext>
-        <viewmodels:Lab3ViewModel/>
+        <viewmodels:Lab4ViewModel/>
     </Window.DataContext>
     <Window.Resources>
         <Style TargetType="RibbonApplicationMenu">
@@ -43,10 +43,15 @@
                               Margin="5"
                               ItemsSource="{Binding Source={StaticResource enmCryptionOptions}}"
                               SelectedItem="{Binding SelectedOption, Mode=TwoWay}"/>
+                    <ComboBox Text="Languages" 
+                              Margin="5"
+                              ItemsSource="{Binding Source={StaticResource enmLanguages}}"
+                              SelectedItem="{Binding Language,Mode=TwoWay}">
+                    </ComboBox>
                     <Label Content="Key:"/>
                     <TextBox Width="100"
                              Margin="5"
-                             Text="{Binding EncryptionMachine.XORKey,Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"/>
+                             Text="{Binding EncryptionMachine.VigenereKey,Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button Content="Act"
                             Width="50"
                             Height="20"

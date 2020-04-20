@@ -45,6 +45,18 @@ namespace CryptologyApp.ViewModels
             }
         }
 
+        private Lab4View _lab4View;
+        private Lab4View Lab4View
+        {
+            get
+            {
+                if (_lab4View != null) return _lab4View;
+                _lab4View = new Lab4View();
+                _lab4View.Closed += (object o, EventArgs e) => { _lab4View = null; };
+                return _lab4View;
+            }
+        }
+
         public ICommand OpenNewWindowCommand 
         {
             get
@@ -63,6 +75,8 @@ namespace CryptologyApp.ViewModels
                     return Lab2View.Visibility != System.Windows.Visibility.Visible;
                 case Consts.Labs.XOR:
                     return Lab3View.Visibility != System.Windows.Visibility.Visible;
+                case Consts.Labs.Vigenere:
+                    return Lab4View.Visibility != System.Windows.Visibility.Visible;
                 default:
                     return false;
             }
@@ -81,6 +95,9 @@ namespace CryptologyApp.ViewModels
                     break;
                 case Consts.Labs.XOR:
                     Lab3View.Show();
+                    break;
+                case Consts.Labs.Vigenere:
+                    Lab4View.Show();
                     break;
                 default:
                     MessageBox.Show("Wrong lab name");
