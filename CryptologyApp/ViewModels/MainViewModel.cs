@@ -1,11 +1,9 @@
-﻿using CryptologyApp.Views;
+﻿using CryptologyApp.Models;
+using CryptologyApp.Views;
 using Microsoft.VisualStudio.PlatformUI;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
-using CryptologyApp.Models;
 using System.Windows;
+using System.Windows.Input;
 
 namespace CryptologyApp.ViewModels
 {
@@ -35,6 +33,18 @@ namespace CryptologyApp.ViewModels
             }
         }
 
+        private Lab3View _lab3View;
+        private Lab3View Lab3View
+        {
+            get
+            {
+                if (_lab3View != null) return _lab3View;
+                _lab3View = new Lab3View();
+                _lab3View.Closed += (object o, EventArgs e) => { _lab3View = null; };
+                return _lab3View;
+            }
+        }
+
         public ICommand OpenNewWindowCommand 
         {
             get
@@ -51,6 +61,8 @@ namespace CryptologyApp.ViewModels
                     return Lab1View.Visibility != System.Windows.Visibility.Visible;
                 case Consts.Labs.Trithemius:
                     return Lab2View.Visibility != System.Windows.Visibility.Visible;
+                case Consts.Labs.XOR:
+                    return Lab3View.Visibility != System.Windows.Visibility.Visible;
                 default:
                     return false;
             }
@@ -66,6 +78,9 @@ namespace CryptologyApp.ViewModels
                     break;
                 case Consts.Labs.Trithemius:
                     Lab2View.Show();
+                    break;
+                case Consts.Labs.XOR:
+                    Lab3View.Show();
                     break;
                 default:
                     MessageBox.Show("Wrong lab name");

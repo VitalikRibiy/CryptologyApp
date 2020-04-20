@@ -30,6 +30,8 @@
                     CommandParameter="{Binding Path=Content,RelativeSource={RelativeSource Mode=Self}}"/>
             <Button Content="Trithemius cipher"
                     CommandParameter="{Binding Path=Content,RelativeSource={RelativeSource Mode=Self}}"/>
+            <Button Content="XOR"
+                    CommandParameter="{Binding Path=Content,RelativeSource={RelativeSource Mode=Self}}"/>
         </StackPanel>
     </Grid>
 </Window>

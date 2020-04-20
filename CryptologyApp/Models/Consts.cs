@@ -44,7 +44,8 @@ namespace CryptologyApp.Models
         public enum Labs
         {
             Cesars,
-            Trithemius
+            Trithemius,
+            XOR
         }
     }
 }

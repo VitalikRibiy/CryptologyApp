@@ -5,6 +5,8 @@ using System.Linq;
 using static CryptologyApp.Models.Consts;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.IO;
+using Microsoft.Win32;
 
 namespace CryptologyApp.Models
 {
@@ -232,6 +234,49 @@ namespace CryptologyApp.Models
             else
             {
                 return ":(";
+            }
+        }
+
+        #endregion
+
+        #region XOR
+
+        private string _xorKey;
+        public string XORKey
+        {
+            get { return _xorKey; }
+            set
+            {
+                _xorKey = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        public string EncryptDecryptXOR(string input)
+        {
+            //StratchKey(input);
+            var first = Encoding.ASCII.GetBytes(input);
+            var second = Encoding.ASCII.GetBytes(XORKey);
+            byte[] output = new byte[first.Length];
+            
+            for (int i = 0; i < input.Length; i++)
+            {
+                output[i] = (byte)(input[i] ^ second[i % second.Length]);
+            }
+            //SaveFileDialog openFileDialog = new SaveFileDialog();
+            //if (openFileDialog.ShowDialog() == true)
+            //{
+            //    File.WriteAllBytes(openFileDialog.FileName, output);
+            //}
+            return Encoding.ASCII.GetString(output);
+        }
+
+        public void StratchKey(string input)
+        {
+            if (XORKey == null || XORKey.Length == 0) return;
+            while (XORKey.Length < input.Length)
+            {
+                XORKey += XORKey;
             }
         }
 
