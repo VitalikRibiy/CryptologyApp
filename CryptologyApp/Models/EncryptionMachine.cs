@@ -392,35 +392,48 @@ namespace CryptologyApp.Models
             return (a % b + b) % b;
         }
 
-        public string VigenereCipher(string input, bool encipher)
+        public string VigenereEncrypt(string str)
         {
-            for (int i = 0; i < VigenereKey.Length; ++i)
-                if (!char.IsLetter(VigenereKey[i]))
-                    return null; // Error
+            string cipher_text = string.Empty;
 
-            string output = string.Empty;
-            int nonAlphaCharCount = 0;
-
-            for (int i = 0; i < input.Length; ++i)
+            for (int i = 0; i < str.Length; i++)
             {
-                if (char.IsLetter(input[i]))
+                var el = str[i];
+
+                if(vigenereAlphabet.Contains(el))
                 {
-                    bool cIsUpper = char.IsUpper(input[i]);
-                    char offset = cIsUpper ? 'A' : 'a';
-                    int keyIndex = (i - nonAlphaCharCount) % VigenereKey.Length;
-                    int k = (cIsUpper ? char.ToUpper(VigenereKey[keyIndex]) : char.ToLower(VigenereKey[keyIndex])) - offset;
-                    k = encipher ? k : -k;
-                    char ch = vigenereAlphabet[(VMod(((input[i] + k) - offset), vigenereAlphabet.Length)) + offset];
-                    output += ch;
-                }
-                else
+                    int x = (vigenereAlphabet.IndexOf(el) + vigenereAlphabet.IndexOf(VigenereKey[i % VigenereKey.Length])) % vigenereAlphabet.Length;
+
+                    cipher_text += vigenereAlphabet[x];
+                }    
+                else if (el == ' ')
                 {
-                    output += input[i];
-                    ++nonAlphaCharCount;
+                    cipher_text += ' ';
                 }
             }
+            return cipher_text;
+        }
 
-            return output;
+        public string VigenereDecrypt(string cipher_text)
+        {
+            string orig_text = string.Empty;
+
+            for (int i = 0; i < cipher_text.Length; i++)
+            {
+                var el = cipher_text[i];
+
+                if(vigenereAlphabet.Contains(el))
+                {
+                    int x = (vigenereAlphabet.IndexOf(el) - vigenereAlphabet.IndexOf(VigenereKey[i % VigenereKey.Length]) + vigenereAlphabet.Length) % vigenereAlphabet.Length;
+                    orig_text += vigenereAlphabet[x];
+
+                }
+                else if (el == ' ')
+                {
+                    orig_text += ' ';
+                }
+            }
+            return orig_text;
         }
 
         private string vigenereAlphabet = alphabetEng;

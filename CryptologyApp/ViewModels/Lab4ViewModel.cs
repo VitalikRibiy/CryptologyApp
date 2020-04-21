@@ -143,10 +143,10 @@ namespace CryptologyApp.ViewModels
                 switch (SelectedOption)
                 {
                     case CryptionOption.Encrypt:
-                        ExportString = EncryptionMachine.VigenereCipher(InputString, true);
+                        ExportString = EncryptionMachine.VigenereEncrypt(InputString);
                         break;
                     case CryptionOption.Decrypt:
-                        ExportString = EncryptionMachine.VigenereCipher(InputString, false);
+                        ExportString = EncryptionMachine.VigenereDecrypt(InputString);
                         break;
                 }
             }

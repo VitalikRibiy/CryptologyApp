@@ -79,7 +79,7 @@
             <TextBlock Grid.Column="1"
                        HorizontalAlignment="Center"
                        Text="Output"/>
-            <TextBox Text="{Binding Path=ExportString,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+            <TextBox Text="{Binding Path=ExportString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                      Margin="10,0,10,10" 
                      Grid.Column="2"
                      Grid.Row="1">

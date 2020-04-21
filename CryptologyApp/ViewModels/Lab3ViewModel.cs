@@ -92,16 +92,17 @@ namespace CryptologyApp.ViewModels
                 var inp = File.ReadAllText(openFileDialog.FileName);
                 InputString = inp;
                 var bytes = File.ReadAllBytes(openFileDialog.FileName);
-                var key = File.ReadAllBytes("KeyText.txt");
+                File.WriteAllText(@"C:\Users\Vitalii Ribii\Desktop\KeyText.txt", EncryptionMachine.XORKey.ToUpperInvariant());
+                var key = File.ReadAllBytes(@"C:\Users\Vitalii Ribii\Desktop\KeyText.txt");
                 if (CryptionOption.Encrypt == SelectedOption)
                 {
-                    File.WriteAllBytes("Output.txt", EncryptionMachine.Encrypt(bytes,key));
-                    ExportString = File.ReadAllText("Output.txt");
+                    File.WriteAllBytes(@"C:\Users\Vitalii Ribii\Desktop\Output.txt", EncryptionMachine.Encrypt(bytes,key));
+                    ExportString = File.ReadAllText(@"C:\Users\Vitalii Ribii\Desktop\Output.txt");
                 }
                 else
                 {
-                    File.WriteAllBytes("Output.txt", EncryptionMachine.Decrypt(bytes, key));
-                    ExportString = File.ReadAllText("Output.txt");
+                    File.WriteAllBytes(@"C:\Users\Vitalii Ribii\Desktop\Output.txt", EncryptionMachine.Decrypt(bytes, key));
+                    ExportString = File.ReadAllText(@"C:\Users\Vitalii Ribii\Desktop\Output.txt");
                 }
             }
         }
